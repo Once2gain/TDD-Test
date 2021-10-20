@@ -37,7 +37,9 @@ class WordGuesserGame
       raise ArgumentError
     end
     word = word.downcase
-    if not @guesses.include?word and not @wrong_guesses.include?word
+    if @guesses.include?word or @wrong_guesses.include?word
+      return false
+    else
       @count += 1
       if @word.include?word
         @guesses.insert(0, word)
@@ -57,8 +59,7 @@ class WordGuesserGame
       if @count == 7 and @word_with_guesses.include?'-'
         @check_win_or_lose = :lose
       end
-    else
-      return false
+      return true
     end
   end
 

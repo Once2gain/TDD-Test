@@ -15,6 +15,17 @@ class WordGuesserApp < Sinatra::Base
     session[:game] = @game
   end
   
+  # post '/new' do
+  #   'Guess a letter'
+  #   redirect '/show'
+
+  # end
+
+  # post '/show' do
+  #   'Guess a letter'
+  #   redirect '/show'
+  # end
+
   # These two routes are good examples of Sinatra syntax
   # to help you with the rest of the assignment
   get '/' do
@@ -25,6 +36,10 @@ class WordGuesserApp < Sinatra::Base
     erb :new
   end
   
+  get '/create' do
+    "Hello World"
+  end
+
   post '/create' do
     # NOTE: don't change next line - it's needed by autograder!
     word = params[:word] || WordGuesserGame.get_random_word
@@ -40,6 +55,14 @@ class WordGuesserApp < Sinatra::Base
   post '/guess' do
     letter = params[:guess].to_s[0]
     ### YOUR CODE HERE ###
+    begin 
+    @valid = @game.guess(letter)
+    if not @valid
+      flash[:message] = "You have already used that letter."
+    end
+    rescue ArgumentError
+      flash[:message] = "Invalid guess."
+    end
     redirect '/show'
   end
   
@@ -50,17 +73,24 @@ class WordGuesserApp < Sinatra::Base
   # wrong_guesses and word_with_guesses from @game.
   get '/show' do
     ### YOUR CODE HERE ###
+    if @game.check_win_or_lose == :win
+      redirect '/win'  
+    end
+    if @game.check_win_or_lose == :lose
+      redirect '/lose'  
+    end
+
     erb :show # You may change/remove this line
   end
   
   get '/win' do
     ### YOUR CODE HERE ###
-    erb :win # You may change/remove this line
+    redirect '/show'  
   end
   
   get '/lose' do
     ### YOUR CODE HERE ###
-    erb :lose # You may change/remove this line
+    redirect '/show'  
   end
-  
+
 end
