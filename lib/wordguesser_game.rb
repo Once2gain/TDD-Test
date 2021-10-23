@@ -40,7 +40,6 @@ class WordGuesserGame
     if @guesses.include?word or @wrong_guesses.include?word
       return false
     else
-      @count += 1
       if @word.include?word
         @guesses.insert(0, word)
         i = 0
@@ -54,6 +53,7 @@ class WordGuesserGame
           @check_win_or_lose = :win
         end
       else
+        @count += 1
         @wrong_guesses.insert(0, word)
       end
       if @count == 7 and @word_with_guesses.include?'-'
